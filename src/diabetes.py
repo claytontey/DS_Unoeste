@@ -10,7 +10,9 @@ import plotly.offline as py
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Perceptron
+from sklearn import metrics
 from sklearn.metrics import confusion_matrix
+from sklearn.naive_bayes import GaussianNB
 
 
 plt.style.use('ggplot')
@@ -116,6 +118,7 @@ def information():
 
 # Criar uma lista de armazenamento de accuracia
 accuracy_PC = []
+accuracy_NB = []
 
 def split_model():
     print('\n ************************* Resultados ************************ \n')
@@ -128,19 +131,30 @@ def split_model():
         print('Quantidade de amostras da classe 0: ', len(y_train.loc[y_train == 0]))
         print('Quantidade de amostras da classe 1: ', len(y_train.loc[y_train == 1]))
 
-        percep = Perceptron(random_state=i)
+        # Perceptron
+        percep = Perceptron()
         percep.fit(X_train, y_train)
         percep.predictions = percep.predict(X_test)
         acc_perpep = percep.score(X_test, y_test)
 
+        # Naive Bayes
+        gnb = GaussianNB()
+        gnb.fit(X_train, y_train)
+        gnb.predictions = gnb.predict(X_test)
+        acc_nb = gnb.score(X_test, y_test)
+
+
+
         # Accuracy
         accuracy_PC.append(acc_perpep)
+        accuracy_NB.append(acc_nb)
 
         print('\n Resultados Perceptron: \nAcc_Pc: ', acc_perpep)
+        print('\n Resultados Naive Bayes: \nAcc_NB: ', acc_nb)
         #print(metrics.confusion_matrix(y_test, percep.predictions))
         #print('\nClassificação:\n', metrics.classification_report(y_test, percep.predictions))
-        median = np.mean(accuracy_PC)
-        print('Vetor de Acc: ', median)
+        print('Vetor de Acc Perceptron: ', accuracy_PC)
+        print('Vetor de Acc Bayes: ', accuracy_NB)
 
 
 
